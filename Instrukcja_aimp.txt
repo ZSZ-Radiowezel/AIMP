@@ -1,0 +1,68 @@
+===============================  
+         RADIOWĘZEŁ  
+===============================  
+
+***Plik konfiguracyjny:***  
+C:/radiowezel/config.py  
+
+Zawiera m.in.:  
+- Godziny aktualizacji playlisty  
+- Godziny uruchamiania i wyciszania głośników  
+
+-------------------------------  
+  SCHEMAT DZIAŁANIA SYSTEMU  
+-------------------------------  
+
+1. ***Uruchomienie aplikacji***  
+   - Odtwarzacz AIMP uruchamiany jest automatycznie przy starcie kodu.  
+
+2. ***Aktualizacja playlisty***  
+   - O określonych godzinach (zgodnie z config.py) pobierane są zwycięskie piosenki.  
+   - Piosenki zapisywane są tymczasowo w:  
+     C:/radiowezel/audio_temp  
+   - Usuwany jest plik wcześniejszej playlisty.  
+
+3. ***Transkrypcja i analiza sentymentu***  
+   - Każda piosenka jest transkrybowana i analizowana pod kątem sentymentu.  
+     - **Pozytywny sentyment:**  
+       ✓ Piosenka przenoszona do: C:/radiowezel/audio  
+       ✓ Dodawana do playlisty i pliku played_songs.txt  
+     - **Negatywny sentyment lub niedozwolone zwroty:**  
+       ✗ Piosenka usuwana z audio_temp  
+       ✗ Dodawana do blacklisted_songs.txt  
+
+4. ***Sprawdzanie duplikatów***  
+   Przed pobraniem sprawdzane jest, czy piosenka:  
+   - Znajduje się w played_songs.txt  
+   - Jest na liście blacklisted_songs.txt  
+   - Znajduje się w katalogu audio  
+
+5. ***Tworzenie pełnej playlisty***  
+   - Do playlisty dodawane są losowe piosenki z katalogu audio, jeśli:  
+     • Nie są w played_songs.txt  
+     • Czas playlisty musi przekraczać 55 minut  
+
+   - Jeśli nie można pobrać wyników głosowania:  
+     • Tworzona jest playlista z losowych piosenek z katalogu audio  
+
+6. Obsługa plików  
+   - **played_songs.txt**:  
+     - Usuwany przy każdym ponownym uruchomieniu kodu
+     - Czyszczenie codziennie o określonej godzinie  
+   - **blacklisted_songs.txt oraz katalog audio:**  
+     - Nie są usuwane ani modyfikowane  
+
+---------------------------------  
+  STEROWANIE ODTWARZACZEM AIMP  
+---------------------------------  
+
+1. Z poziomu komputera: 
+   - Rozszerzone komendy dostępne w CMD  
+
+2. Z aplikacji mobilnej:
+   - Funkcje: Play, Pause, Next  
+
+3. Z panelu administracyjnego (adres strony radiowęzła, port 4359): 
+   - Funkcje: Play, Pause, Next  
+
+===============================  
