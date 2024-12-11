@@ -70,7 +70,7 @@ def initialize_components():
         aimp_controller = AimpController()
         youtube_downloader = YoutubeDownloader()
         
-        request_manager = RequestManager(URL_BACKEND, URL_ADMINPAGE, None)  # Temporarily None for block_manager
+        request_manager = RequestManager(URL_BACKEND, URL_ADMINPAGE) 
         
         playlist_manager = PlaylistManager(
             aimp_controller=aimp_controller,
@@ -84,22 +84,21 @@ def initialize_components():
         schedule_manager = ScheduleManager(
             playlist_manager=playlist_manager, 
             aimp_controller=aimp_controller,
-            block_manager=None  # TTemporarily None for block_manager
+            block_manager=None  
         )
         
         block_manager = BlockManager(BASE_DIR, schedule_manager)
 
         schedule_manager.block_manager = block_manager
-        request_manager.block_manager = block_manager
         
         aimp_controller.clear_played_songs()
 
         command_server = CommandServer(port=5050)
         command_server.set_context(
-            playlist_manager=playlist_manager,
             schedule_manager=schedule_manager,
             aimp_controller=aimp_controller,
-            block_manager=block_manager)
+            block_manager=block_manager,
+            youtube_downloader=youtube_downloader)
         
         command_server.register_routes()
         command_server.start()
